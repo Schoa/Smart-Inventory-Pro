@@ -424,15 +424,14 @@ void showMainMenu()
     std::cout << "2. Add Supplier\n";
     std::cout << "3. Add Member\n";
     std::cout << "4. Process Order\n";
-    std::cout << "5. Show Low Stock\n";
-    std::cout << "6. Show All Stock\n";
-    std::cout << "7. Edit Product\n";
-    std::cout << "8. Edit Supplier\n";
-    std::cout << "9. Edit Member\n";
-    std::cout << "10. Show Supplier List\n";
-    std::cout << "11. Show Member List\n";
-    std::cout << "12. Show Member Order Counts\n"; // New option
-    std::cout << "13. Exit\n";
+    std::cout << "5. Show All Stock\n";
+    std::cout << "6. Edit Product\n";
+    std::cout << "7. Edit Supplier\n";
+    std::cout << "8. Edit Member\n";
+    std::cout << "9. Show Supplier List\n";
+    std::cout << "10. Show Member List\n";
+    std::cout << "11. Show Member Order Counts\n";
+    std::cout << "12. Exit\n";
     std::cout << "Select an option: ";
 }
 
@@ -687,30 +686,27 @@ int main()
             processOrderUI(warehouse);
             break;
         case 5:
-            showLowStockUI(warehouse);
-            break;
-        case 6:
             warehouse.showAllStock();
             break;
-        case 7:
+        case 6:
             editProductUI(warehouse);
             break;
-        case 8:
+        case 7:
             editSupplierUI(warehouse);
             break;
-        case 9:
+        case 8:
             editMemberUI(warehouse);
             break;
-        case 10:
+        case 9:
             warehouse.showSupplierList();
             break;
-        case 11:
+        case 10:
             warehouse.showMemberList();
             break;
-        case 12:
+        case 11:
             warehouse.showMemberOrderCounts();
             break;
-        case 13:
+        case 12:
             std::cout << "Goodbye!\n";
             return 0;
         default:
