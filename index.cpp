@@ -282,24 +282,32 @@ public:
     }
 
     // Add function to count orders by member
-    int countOrdersByMember(int memberId) const {
+    int countOrdersByMember(int memberId) const
+    {
         int count = 0;
-        for (const auto& order : orders) {
+        for (const auto &order : orders)
+        {
             if (order.getMemberId() == memberId)
                 ++count;
         }
         return count;
     }
 
-    void showMemberOrderCounts() const {
+    void showMemberOrderCounts() const
+    {
         std::cout << "\n--- Member Order Counts ---\n";
-        if (members.empty()) {
+        if (members.empty())
+        {
             std::cout << "No members available.\n";
-        } else {
+        }
+        else
+        {
             std::cout << "ID\tName\tRole\tOrder Count\n";
-            for (const auto& [id, member] : members) {
+            for (const auto &[id, member] : members)
+            {
                 int orderCount = 0;
-                for (const auto& order : orders) {
+                for (const auto &order : orders)
+                {
                     if (order.getMemberId() == id)
                         ++orderCount;
                 }
@@ -340,6 +348,17 @@ void clearScreen()
 #endif
 }
 
+// Error logging function
+void logError(const std::string &message)
+{
+    std::ofstream log("error.log", std::ios::app);
+    if (log.is_open())
+    {
+        log << message << std::endl;
+    }
+}
+
+// Update inputInt to log errors
 int inputInt(const std::string &prompt)
 {
     int value;
@@ -356,6 +375,7 @@ int inputInt(const std::string &prompt)
         catch (...)
         {
             std::cout << "Invalid input. Please enter a number.\n";
+            logError("Invalid integer input: '" + line + "'");
         }
     }
     return value;
@@ -368,7 +388,7 @@ double inputDouble(const std::string &prompt)
     std::string line;
     while (true)
     {
-        std::cout << prompt;
+        std::cout << prompt << " (e.g., 12.99): ";
         std::getline(std::cin, line);
         try
         {
@@ -377,13 +397,14 @@ double inputDouble(const std::string &prompt)
         }
         catch (...)
         {
-            std::cout << "Invalid input. Please enter a number.\n";
+            std::cout << "Invalid input. Please enter a valid price.\n";
+            logError("Invalid double input: '" + line + "'");
         }
     }
     return value;
 }
 
-// Helper for ID input with guidance and validation
+// Update inputProductId to log errors
 int inputProductId(const std::string &prompt)
 {
     int value;
@@ -395,11 +416,13 @@ int inputProductId(const std::string &prompt)
         if (input.length() > 8)
         {
             std::cout << "ID must be under 8 characters.\n";
+            logError("Product ID too long: '" + input + "'");
             continue;
         }
         if (!std::all_of(input.begin(), input.end(), ::isdigit))
         {
             std::cout << "ID must only include numbers.\n";
+            logError("Product ID not numeric: '" + input + "'");
             continue;
         }
         try
@@ -410,6 +433,7 @@ int inputProductId(const std::string &prompt)
         catch (...)
         {
             std::cout << "Invalid input. Please enter a valid number.\n";
+            logError("Invalid Product ID input: '" + input + "'");
         }
     }
 }
@@ -430,7 +454,7 @@ void showMainMenu()
     std::cout << "8. Edit Member\n";
     std::cout << "9. Show Supplier List\n";
     std::cout << "10. Show Member List\n";
-    std::cout << "11. Show Member Order Counts\n";
+    std::cout << "11. Show Member Order\n";
     std::cout << "12. Exit\n";
     std::cout << "Select an option: ";
 }
