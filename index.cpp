@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <chrono>
 #include <limits>
+#include <sstream>
 
 // Declare pause() before Warehouse class
 void pause()
@@ -81,6 +82,7 @@ public:
     std::string getName() const { return name; }
     std::string getRole() const { return role; }
     bool authenticate(const std::string &pwd) const { return pwd == password; }
+    std::string getPassword() const { return password; }
 
     void setName(const std::string &newName) { name = newName; }
     void setRole(const std::string &newRole) { role = newRole; }
@@ -336,6 +338,73 @@ public:
             return &(it->second);
         return nullptr;
     }
+
+    // Data persistence functions
+    void saveData() const {
+        // Save products
+        std::ofstream pf("products.txt");
+        for (const auto& product : inventory.getAllProducts()) {
+            pf << product.getId() << '\t' << product.getName() << '\t' << product.getStock() << '\t' << product.getPrice() << '\t' << product.getSupplierId() << '\n';
+        }
+        pf.close();
+        // Save suppliers
+        std::ofstream sf("suppliers.txt");
+        for (const auto& [id, supplier] : suppliers) {
+            sf << supplier.getId() << '\t' << supplier.getName() << '\t' << supplier.getContact() << '\n';
+        }
+        sf.close();
+        // Save members (write one line per member, include password)
+        std::ofstream mf("members.txt");
+        for (const auto& [id, member] : members) {
+            mf << member.getId() << '\t' << member.getName() << '\t' << member.getRole() << '\t' << member.getPassword() << '\n';
+        }
+        mf.close();
+    }
+    void loadData() {
+        // Load products
+        std::ifstream pf("products.txt");
+        if (pf.is_open()) {
+            std::string line;
+            while (std::getline(pf, line)) {
+                std::istringstream iss(line);
+                int id, stock, supplierId;
+                double price;
+                std::string name;
+                if (iss >> id && iss.get() == '\t' && std::getline(iss, name, '\t') && iss >> stock && iss.get() == '\t' && iss >> price && iss.get() == '\t' && iss >> supplierId) {
+                    addProduct(Product(id, name, stock, price, supplierId));
+                }
+            }
+            pf.close();
+        }
+        // Load suppliers
+        std::ifstream sf("suppliers.txt");
+        if (sf.is_open()) {
+            std::string line;
+            while (std::getline(sf, line)) {
+                std::istringstream iss(line);
+                int id;
+                std::string name, contact;
+                if (iss >> id && iss.get() == '\t' && std::getline(iss, name, '\t') && std::getline(iss, contact)) {
+                    addSupplier(Supplier(id, name, contact));
+                }
+            }
+            sf.close();
+        }
+        // Load members (read password field)
+        std::ifstream mf("members.txt");
+        if (mf.is_open()) {
+            std::string line;
+            while (std::getline(mf, line)) {
+                std::istringstream iss(line);
+                int id;
+                std::string name, role, password;
+                if (iss >> id && iss.get() == '\t' && std::getline(iss, name, '\t') && std::getline(iss, role, '\t') && std::getline(iss, password)) {
+                    addMember(Member(id, name, role, password));
+                }
+            }
+            mf.close();
+        }
+    }
 };
 
 // Helper functions for UI
@@ -503,6 +572,7 @@ void addMemberUI(Warehouse &warehouse)
     std::string password = inputString("Password: ");
     warehouse.addMember(Member(id, name, role, password));
     std::cout << "Member added successfully!\n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear buffer before pause
     pause();
 }
 
@@ -683,6 +753,7 @@ void editMemberUI(Warehouse &warehouse)
 int main()
 {
     Warehouse warehouse;
+    warehouse.loadData(); // Load data at startup
     int choice;
     while (true)
     {
@@ -726,6 +797,7 @@ int main()
             warehouse.showMemberOrderCounts();
             break;
         case 12:
+            warehouse.saveData(); // Save data on exit
             std::cout << "Goodbye!\n";
             return 0;
         default:
