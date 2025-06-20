@@ -438,6 +438,16 @@ int inputProductId(const std::string &prompt)
     }
 }
 
+// Helper for safe string input (trims leading/trailing spaces)
+std::string inputString(const std::string &prompt)
+{
+    std::string input;
+    std::cout << prompt;
+    std::getline(std::cin, input);
+    // Optionally trim spaces here if needed
+    return input;
+}
+
 // UI Functions
 void showMainMenu()
 {
@@ -462,9 +472,7 @@ void showMainMenu()
 void addProductUI(Warehouse &warehouse)
 {
     int id = inputProductId("Product ID");
-    std::string name;
-    std::cout << "Name: ";
-    std::getline(std::cin, name);
+    std::string name = inputString("Name: ");
     int stock = inputInt("Stock: ");
     double price = inputDouble("Price: ");
     int supplierId = inputInt("Supplier ID: ");
@@ -475,17 +483,11 @@ void addProductUI(Warehouse &warehouse)
 
 void addSupplierUI(Warehouse &warehouse)
 {
-    int id;
-    std::string name, contact;
     clearScreen();
     std::cout << "--- Add Supplier ---\n";
-    std::cout << "Supplier ID: ";
-    std::cin >> id;
-    std::cout << "Name: ";
-    std::cin.ignore();
-    std::getline(std::cin, name);
-    std::cout << "Contact: ";
-    std::getline(std::cin, contact);
+    int id = inputInt("Supplier ID: ");
+    std::string name = inputString("Name: ");
+    std::string contact = inputString("Contact: ");
     warehouse.addSupplier(Supplier(id, name, contact));
     std::cout << "Supplier added successfully!\n";
     pause();
@@ -493,19 +495,12 @@ void addSupplierUI(Warehouse &warehouse)
 
 void addMemberUI(Warehouse &warehouse)
 {
-    int id;
-    std::string name, role, password;
     clearScreen();
     std::cout << "--- Add Member ---\n";
-    std::cout << "Member ID: ";
-    std::cin >> id;
-    std::cout << "Name: ";
-    std::cin.ignore();
-    std::getline(std::cin, name);
-    std::cout << "Role (employee/customer): ";
-    std::getline(std::cin, role);
-    std::cout << "Password: ";
-    std::getline(std::cin, password);
+    int id = inputInt("Member ID: ");
+    std::string name = inputString("Name: ");
+    std::string role = inputString("Role (employee/customer): ");
+    std::string password = inputString("Password: ");
     warehouse.addMember(Member(id, name, role, password));
     std::cout << "Member added successfully!\n";
     pause();
