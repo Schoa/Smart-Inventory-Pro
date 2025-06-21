@@ -1,0 +1,22 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall
+
+# Source and output
+SRC = smart_inventory.cpp
+OUT = smart_inventory
+
+# Target to compile and run the program
+all: $(OUT)
+
+$(OUT): $(SRC)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT)
+
+run: $(OUT)
+	./$(OUT)
+
+clean:
+	rm -f $(OUT)
+
+# Phony targets
+.PHONY: all run clean
