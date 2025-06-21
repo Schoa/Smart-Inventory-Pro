@@ -3,12 +3,12 @@
 #include <vector>
 #include <map>
 #include <memory>
-#include <stdexcept>
 #include <fstream>
 #include <algorithm>
 #include <chrono>
 #include <limits>
 #include <sstream>
+#include <iomanip>
 
 // Declare pause() before Warehouse class
 void pause()
@@ -237,12 +237,20 @@ public:
         }
         else
         {
-            std::cout << "ID\tName\tStock\tPrice\tSupplierID\n";
+            std::cout << std::left
+                      << std::setw(8) << "ID"
+                      << std::setw(25) << "Name"
+                      << std::setw(8) << "Stock"
+                      << std::setw(10) << "Price"
+                      << std::setw(12) << "SupplierID" << '\n';
             for (const auto &product : all)
             {
-                std::cout << product.getId() << "\t" << product.getName() << "\t"
-                          << product.getStock() << "\t" << product.getPrice() << "\t"
-                          << product.getSupplierId() << "\n";
+                std::cout << std::left
+                          << std::setw(8) << product.getId()
+                          << std::setw(25) << product.getName()
+                          << std::setw(8) << product.getStock()
+                          << std::setw(10) << product.getPrice()
+                          << std::setw(12) << product.getSupplierId() << '\n';
             }
         }
         pause();
@@ -256,10 +264,16 @@ public:
         }
         else
         {
-            std::cout << "ID\tName\tContact\n";
+            std::cout << std::left
+                      << std::setw(8) << "ID"
+                      << std::setw(25) << "Name"
+                      << std::setw(30) << "Contact" << '\n';
             for (const auto &[id, supplier] : suppliers)
             {
-                std::cout << supplier.getId() << "\t" << supplier.getName() << "\t" << supplier.getContact() << "\n";
+                std::cout << std::left
+                          << std::setw(8) << supplier.getId()
+                          << std::setw(25) << supplier.getName()
+                          << std::setw(30) << supplier.getContact() << '\n';
             }
         }
         pause();
